@@ -1,0 +1,62 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.hujiang.android-aspectjx'
+
+android {
+    compileSdkVersion 27
+    defaultConfig {
+        applicationId "com.safframework.app"
+        minSdkVersion 15
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [moduleName: project.getName()]
+            }
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    // 多个jar包里包含了同样的文件（NOTICE.txt）,导致打包时因为担心相互覆盖问题而提示出错, 去掉这2个文件
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+
+    compileOptions {
+        sourceCompatibility = "1.7"
+        targetCompatibility = "1.7"
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    implementation 'com.android.support:appcompat-v7:27.0.2'
+    testImplementation 'junit:junit:4.12'
+
+    implementation project(':saf-aop')
+
+    implementation 'org.aspectj:aspectjrt:1.9.+'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.14'
+    implementation 'com.safframework.log:saf-log:1.5.3'
+    implementation 'com.safframework:saf-cache:1.1.0'
+    implementation 'tony-common:tony-common-utils:1.2.5'
+
+    implementation 'com.safframework.injectview:saf-injectview:1.0.0'
+    annotationProcessor 'com.safframework.injectview:saf-injectview-compiler:1.0.0'
+}
