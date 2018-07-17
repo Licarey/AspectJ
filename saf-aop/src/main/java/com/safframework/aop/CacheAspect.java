@@ -1,8 +1,5 @@
 package com.safframework.aop;
 
-import android.annotation.TargetApi;
-import android.util.Log;
-
 import com.safframework.aop.annotation.Cacheable;
 import com.safframework.cache.Cache;
 
@@ -18,7 +15,6 @@ import java.lang.reflect.Method;
 /**
  * Created by Tony Shen on 16/3/23.
  */
-@TargetApi(14)
 @Aspect
 public class CacheAspect {
 
@@ -32,19 +28,17 @@ public class CacheAspect {
     }
 
     private Object cacheMethod(final ProceedingJoinPoint joinPoint) throws Throwable {
-        Log.e("LM" , "LM___cacheMethod");
 
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
 
         Cacheable cacheable = method.getAnnotation(Cacheable.class);
         Object result = null;
-        Log.e("LM" , "LM___cacheable " + cacheable);
 
         if (cacheable!=null) {
             String key = cacheable.key();
             int expiry = cacheable.expiry();
-            Log.e("LM" , "LM___key " + key);
+
             result = joinPoint.proceed();
             Cache cache = Cache.get(Utils.getContext());
             if (expiry>0) {
